@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "../components/Login";
-import SignUp from "../components/SignUp";
-import Home from "../components/Home";
+import Home from "../screens/Home";
+import Login from "../screens/Login";
+import SignUp from "../screens/SignUp";
 
 function AppNavigator() {
   return (

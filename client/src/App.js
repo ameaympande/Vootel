@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   return (
-    <div>
+    <div className="bg-background-secondary h-screen">
       <AppNavigator />
     </div>
   );
