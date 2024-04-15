@@ -7,24 +7,24 @@ import googleLogo from "../assets/image/google.png";
 function Login() {
   const [form, setForm] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const [errors, setErrors] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    setForm(prevState => ({
+    setForm((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
 
-    setErrors(prevErrors => ({
+    setErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: ""
+      [name]: "",
     }));
   };
 
@@ -87,7 +87,9 @@ function Login() {
               </div>
             </div>
             <div className="mt-2 flex justify-end">
-              <a className="text-color-primary text-xs font-bold hover:cursor-pointer">Forgot password?</a>
+              <a className="text-color-primary text-xs font-bold hover:cursor-pointer">
+                Forgot password?
+              </a>
             </div>
             <div className="mt-5">
               <Button onClick={handleLogin}>Sign in</Button>
@@ -98,19 +100,26 @@ function Login() {
               <div className="w-1/2 border border-grey h-0" />
             </div>
             <div className="mt-2 flex items-center justify-center">
-              <button className={`hover:bg-blue-500 text-black font-semibold py-2 px-2 rounded-full border border-slate-300`}>
+              <button
+                className={`hover:bg-blue-500 text-black font-semibold py-2 px-2 rounded-full border border-slate-300`}
+              >
                 <img src={googleLogo} className="h-7 lg:h-18" alt="Google" />
               </button>
             </div>
             <div>
               <div className="mt-3 flex justify-center items-center">
                 <p className="text-sm font-normal">Don't have an account?</p>
-                <a className="text-color-primary text-sm font-bold hover:cursor-pointer ml-1">Sign up</a>
+                <a
+                  className="text-color-primary text-sm font-bold hover:cursor-pointer ml-1"
+                  href="/signup"
+                >
+                  Sign up
+                </a>
               </div>
             </div>
           </div>
         </div>
-        <div className="bg-background-primary lg:mt-16 mt-10 lg:w-[20%] flex justify-center items-center rounded-tr-xl rounded-br-xl hidden lg:flex ">
+        <div className="bg-background-darker lg:mt-16 mt-10 lg:w-[20%] flex justify-center items-center rounded-tr-xl rounded-br-xl hidden lg:flex ">
           <img src={logo} className="h-24 lg:h-32" alt="logo" />
         </div>
       </div>
