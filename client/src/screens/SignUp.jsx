@@ -5,9 +5,12 @@ import Button from "../components/Button";
 import googleLogo from "../assets/image/google.png";
 import { ThreeDots } from "react-loader-spinner";
 import { signUp } from "../api/SignUpAPI";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
-  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -33,7 +36,8 @@ function SignUp() {
     }));
   };
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (e) => {
+    e.preventDefault();
     setLoading(true);
     const { email, password } = form;
     const newErrors = {};
@@ -61,18 +65,19 @@ function SignUp() {
 
     try {
       const res = await signUp(form);
-      if (res) {
-        console.log(res);
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        navigate("/signin");
+      } else {
+        toast.error(res.data.error);
       }
     } catch (err) {
-      console.log("Error while signUp :", err);
+      console.error(err);
+      toast.error("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }
-
-
   };
-
 
   return (
     <div className="h-screen">
@@ -83,7 +88,7 @@ function SignUp() {
         <div className="bg-white lg:mt-7 mt-10 lg:w-[40%] rounded-r-xl ">
           <div className="px-4 lg:px-20 py-7 items-center">
             <p className="text-3xl font-medium">SignUp</p>
-            <form>
+            <form onSubmit={handleSignUp}>
               <div className="mt-4">
                 <p className="text-md font-normal">Email</p>
                 <div className="mt-2">
@@ -126,28 +131,29 @@ function SignUp() {
                   />
                 </div>
               </div>
-            </form>
 
-            <div className="mt-6">
-              <Button onClick={handleSignUp}>
-                {loading ? (
-                  <div className="flex items-center justify-center">
-                    <ThreeDots
-                      visible={true}
-                      height="22"
-                      width="50"
-                      color="white"
-                      radius="9"
-                      ariaLabel="three-dots-loading"
-                      wrapperStyle={{}}
-                      wrapperClass=""
-                    />
-                  </div>
-                ) : (
-                  "Create New Account"
-                )}
-              </Button>
-            </div>
+
+              <div className="mt-6">
+                <Button type="submit" onClick={handleSignUp}>
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <ThreeDots
+                        visible={true}
+                        height="22"
+                        width="50"
+                        color="white"
+                        radius="9"
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                      />
+                    </div>
+                  ) : (
+                    "Create New Account"
+                  )}
+                </Button>
+              </div>
+            </form>
             <div className="mt-5 flex flex-row gap-3 items-center">
               <div className="w-1/2 border border-grey h-0" />
               <p className="text-sm font-normal text-slate-500">OR</p>

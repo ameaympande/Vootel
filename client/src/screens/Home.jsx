@@ -4,6 +4,7 @@ import Chats from "../components/home/Chats";
 function Home() {
   return (
     <div className="h-screen">
+
       <Chats />
     </div>
   );

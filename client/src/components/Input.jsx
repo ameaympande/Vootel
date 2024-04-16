@@ -1,7 +1,7 @@
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 
-function Input({ name, type, placeholder, value, onChange, fontSize, error }) {
+function Input({ name, type, placeholder, value, onChange, fontSize, error, autoComplete }) {
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -14,6 +14,7 @@ function Input({ name, type, placeholder, value, onChange, fontSize, error }) {
                 name={name}
                 type={showPassword ? 'text' : type}
                 placeholder={placeholder}
+                autoComplete={autoComplete}
                 value={value}
                 onChange={onChange}
                 className={`border ${error ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:border-primary-light w-full bg-[#ecf3f9] pr-10 ${fontSize}`}
