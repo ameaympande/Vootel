@@ -87,7 +87,7 @@ function Login() {
               </div>
             </div>
             <div className="mt-2 flex justify-end">
-              <a className="text-color-primary text-xs font-bold hover:cursor-pointer">
+              <a className="text-color-darker text-xs font-bold hover:cursor-pointer">
                 Forgot password?
               </a>
             </div>
@@ -110,7 +110,7 @@ function Login() {
               <div className="mt-3 flex justify-center items-center">
                 <p className="text-sm font-normal">Don't have an account?</p>
                 <a
-                  className="text-color-primary text-sm font-bold hover:cursor-pointer ml-1"
+                  className="text-color-darker text-sm font-bold hover:cursor-pointer ml-1"
                   href="/signup"
                 >
                   Sign up

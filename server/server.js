@@ -1,9 +1,33 @@
+require("dotenv").config();
 const http = require("http");
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT;
+const ENV = process.env.ENV;
 const cors = require("cors");
 const server = http.createServer(app);
+const connectDB = require("./config/dbConn");
+const auth = require("./auth/authHelper");
+
+const corsOption = require("./config/corsOption");
+const { logger, logEvents } = require("./middleware/logger");
+const errorHandler = require("./middleware/errorHandler");
+
+connectDB();
+
+app.use(logger);
+
+app.use(cors(corsOption));
+
+app.use(express.json());
+
+app.post("/login", auth.login);
+app.post("/signup", auth.signUp);
+// app.use("/users", require("./routes/userRoutes"));
+
+app.use(errorHandler);
+
 const socketIO = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -25,6 +49,16 @@ app.get("/", (req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+mongoose.connection.once("open", () => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT} with ${ENV} Environment`);
+  });
+});
+
+mongoose.connection.on("error", (err) => {
+  console.log(err);
+  logEvents(
+    `${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`,
+    "mongoErrLog.log"
+  );
 });
