@@ -4,11 +4,14 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import googleLogo from "../assets/image/google.png";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { LoginAPI } from "../api/LoginAPI";
 import { ThreeDots } from "react-loader-spinner";
+import { setUser } from "../redux/features/User/UserSlice";
 
 function Login() {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -62,6 +65,8 @@ function Login() {
       const res = await LoginAPI(form);
       if (res.status === 200) {
         toast.success(res.data.message);
+        dispatch(setUser({ email: form.email, isLoggedIn: true }))
+        localStorage.setItem("vootelToken", res.data.token)
         navigate("/");
       } else {
         toast.error(res.data.error);

@@ -6,14 +6,21 @@ import SignUp from "../screens/SignUp";
 import PrivateRoute from "../utils/PrivateRoute";
 
 function AppNavigator() {
+  const isAuthenticated = localStorage.getItem("vootelToken") !== null;
   return (
     <BrowserRouter>
       <Routes>
         <Route exact element={<PrivateRoute />}>
           <Route exact path="/" element={<Home />} />
         </Route>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<Login />} />
+        <Route
+          path="/signup"
+          element={isAuthenticated ? <Home /> : <SignUp />}
+        />
+        <Route
+          path="/signin"
+          element={isAuthenticated ? <Home /> : <Login />}
+        />
       </Routes>
     </BrowserRouter>
   );
