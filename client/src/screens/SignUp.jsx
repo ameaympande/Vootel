@@ -3,8 +3,11 @@ import logo from "../assets/image/Slogo.png";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import googleLogo from "../assets/image/google.png";
+import { ThreeDots } from "react-loader-spinner";
+import { signUp } from "../api/SignUpAPI";
 
 function SignUp() {
+  const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -30,7 +33,8 @@ function SignUp() {
     }));
   };
 
-  const handleLogin = () => {
+  const handleSignUp = async () => {
+    setLoading(true);
     const { email, password } = form;
     const newErrors = {};
 
@@ -40,19 +44,35 @@ function SignUp() {
 
     if (password.trim() === "") {
       newErrors.password = "Password cannot be empty";
+    } else if (password.length < 8) {
+      newErrors.password = "Password should be at least 8 characters long";
     }
 
-    if (password.length <= 8) {
-      newErrors.password = "Password should 8 character long";
+    if (form.password !== form.cpassword) {
+      newErrors.password = "Password should match";
+      newErrors.cpassword = "Password should match";
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setLoading(false);
       return;
     }
 
-    console.log("Logging in with:", form);
+    try {
+      const res = await signUp(form);
+      if (res) {
+        console.log(res);
+      }
+    } catch (err) {
+      console.log("Error while signUp :", err);
+    } finally {
+      setLoading(false);
+    }
+
+
   };
+
 
   return (
     <div className="h-screen">
@@ -63,51 +83,70 @@ function SignUp() {
         <div className="bg-white lg:mt-7 mt-10 lg:w-[40%] rounded-r-xl ">
           <div className="px-4 lg:px-20 py-7 items-center">
             <p className="text-3xl font-medium">SignUp</p>
-            <div className="mt-4">
-              <p className="text-md font-normal">Email</p>
-              <div className="mt-2">
-                <Input
-                  name="email"
-                  value={form.email}
-                  onChange={handleOnChange}
-                  type="text"
-                  placeholder="example@vootel.com"
-                  fontSize="text-sm sm:text-md"
-                  error={errors.email}
-                />
+            <form>
+              <div className="mt-4">
+                <p className="text-md font-normal">Email</p>
+                <div className="mt-2">
+                  <Input
+                    name="email"
+                    value={form.email}
+                    onChange={handleOnChange}
+                    type="text"
+                    placeholder="example@vootel.com"
+                    fontSize="text-sm sm:text-md"
+                    error={errors.email}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="mt-5">
-              <p className="text-md font-normal">Password</p>
-              <div className="mt-2">
-                <Input
-                  name="password"
-                  value={form.password}
-                  onChange={handleOnChange}
-                  type="password"
-                  placeholder="Password"
-                  fontSize="text-sm sm:text-md"
-                  error={errors.password}
-                />
+              <div className="mt-5">
+                <p className="text-md font-normal">Password</p>
+                <div className="mt-2">
+                  <Input
+                    name="password"
+                    value={form.password}
+                    onChange={handleOnChange}
+                    type="password"
+                    placeholder="Password"
+                    fontSize="text-sm sm:text-md"
+                    error={errors.password}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="mt-5">
-              <p className="text-md font-normal">Confirm Password</p>
-              <div className="mt-2">
-                <Input
-                  name="cpassword"
-                  value={form.cpassword}
-                  onChange={handleOnChange}
-                  type="password"
-                  placeholder="Confirm Password"
-                  fontSize="text-sm sm:text-md"
-                  error={errors.password}
-                />
+              <div className="mt-5">
+                <p className="text-md font-normal">Confirm Password</p>
+                <div className="mt-2">
+                  <Input
+                    name="cpassword"
+                    value={form.cpassword}
+                    onChange={handleOnChange}
+                    type="password"
+                    placeholder="Confirm Password"
+                    fontSize="text-sm sm:text-md"
+                    error={errors.password}
+                  />
+                </div>
               </div>
-            </div>
+            </form>
 
-            <div className="mt-5">
-              <Button onClick={handleLogin}>Create New Account</Button>
+            <div className="mt-6">
+              <Button onClick={handleSignUp}>
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <ThreeDots
+                      visible={true}
+                      height="22"
+                      width="50"
+                      color="white"
+                      radius="9"
+                      ariaLabel="three-dots-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </div>
+                ) : (
+                  "Create New Account"
+                )}
+              </Button>
             </div>
             <div className="mt-5 flex flex-row gap-3 items-center">
               <div className="w-1/2 border border-grey h-0" />
@@ -116,7 +155,7 @@ function SignUp() {
             </div>
             <div className="mt-2 flex items-center justify-center">
               <button
-                className={`hover:bg-blue-500 text-black font-semibold py-2 px-2 rounded-full border border-slate-300`}
+                className={` text-black font-semibold py-2 px-2 rounded-full border border-slate-300`}
               >
                 <img src={googleLogo} className="h-7 lg:h-18" alt="Google" />
               </button>
@@ -125,7 +164,7 @@ function SignUp() {
               <div className="mt-3 flex justify-center items-center">
                 <p className="text-sm font-normal">Already have an account?</p>
                 <a
-                  className="text-color-primary text-sm font-bold hover:cursor-pointer ml-1"
+                  className="text-color-darker text-sm font-bold hover:cursor-pointer ml-1"
                   href="/signin"
                 >
                   Sign in
