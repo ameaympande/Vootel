@@ -13,8 +13,8 @@ module.exports = {
           dark: "#6b7280",
         },
         background: {
-          primary: "#F7EEDD",
-          secondary: "#ACE2E1",
+          primary: "#1B262C",
+          secondary: "#0F4C75",
           darker: "#008DDA",
         },
         color: {
