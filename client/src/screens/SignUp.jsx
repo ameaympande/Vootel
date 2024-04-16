@@ -37,7 +37,7 @@ function SignUp() {
   };
 
   const handleSignUp = async (e) => {
-    e.preventDefault(); // Prevents the default form submission behavior
+    e.preventDefault();
     setLoading(true);
     const { email, password } = form;
     const newErrors = {};
@@ -88,7 +88,7 @@ function SignUp() {
         <div className="bg-white lg:mt-7 mt-10 lg:w-[40%] rounded-r-xl ">
           <div className="px-4 lg:px-20 py-7 items-center">
             <p className="text-3xl font-medium">SignUp</p>
-            <form onSubmit={handleSignUp}> {/* Added onSubmit event listener */}
+            <form onSubmit={handleSignUp}>
               <div className="mt-4">
                 <p className="text-md font-normal">Email</p>
                 <div className="mt-2">

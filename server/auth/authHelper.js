@@ -12,28 +12,22 @@ const login = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email }).lean().exec();
 
   if (!user) {
-    return res.status(401).json({ error: "Invalid username or password" });
+    return res
+      .status(404)
+      .json({ error: "User not found, please create a new account." });
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    return res.status(401).json({ error: "Invalid username or password" });
-  }
-
-  if (!user) {
-    return res
-      .status(404)
-      .json({ error: "User not found, please create a new account." });
+    return res.status(400).json({ error: "Invalid username or password" });
   }
 
   const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
     expiresIn: "24h",
   });
 
-  res.json({
-    data: { message: "Login success", token: token, userId: user._id },
-  });
+  res.json({ message: "Login success", token: token, userId: user._id });
 });
 
 const signUp = asyncHandler(async (req, res) => {
