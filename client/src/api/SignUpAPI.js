@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const signUp = async ({ email, password }) => {
-  const apiUrl = "https://vootel.onrender.com" + "/signup";
+  const apiUrl = "https://vootel.onrender.com/signup";
   const body = {
     email,
     password,
@@ -9,9 +9,13 @@ export const signUp = async ({ email, password }) => {
 
   try {
     const response = await axios.post(apiUrl, body);
-    return response.data;
+    if (response.status === 201) {
+      return response;
+    } else {
+      throw new Error(response.data.error || "Unexpected error occurred");
+    }
   } catch (error) {
-    console.log("Error while signing up:", error);
-    throw error;
+    console.error("Error while signing up:", error.response);
+    return error.response || "Unexpected error occurred";
   }
 };
