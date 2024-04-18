@@ -62,21 +62,31 @@ function Login() {
     }
 
     try {
-      const res = await LoginAPI(form);
+      const timeoutPromise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject(new Error("Server timeout."));
+        }, 5000);
+      });
+      const res = await Promise.race([LoginAPI(form), timeoutPromise]);
       if (res.status === 200) {
         toast.success(res.data.message);
-        dispatch(setUser({ email: form.email, isLoggedIn: true }))
-        localStorage.setItem("vootelToken", res.data.token)
+        dispatch(setUser({ email: form.email, isLoggedIn: true }));
+        localStorage.setItem("vootelToken", res.data.token);
         navigate("/");
       } else {
         toast.error(res.data.error);
       }
-    } catch (err) {
-      console.error(err);
-      toast.error("An unexpected error occurred. Please try again later.");
+    } catch (error) {
+      if (error.message === "Server timeout.") {
+        toast.error("Server timed out. Please try again later.");
+      } else {
+        console.error(error);
+        toast.error("An unexpected error occurred. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

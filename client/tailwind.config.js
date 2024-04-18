@@ -13,14 +13,16 @@ module.exports = {
           dark: "#6b7280",
         },
         background: {
-          primary: "#1B262C",
+          primary: "#3a3f46",
           secondary: "#0F4C75",
           darker: "#008DDA",
+          lighter: "#1176ad",
         },
         color: {
           primary: "#13308e",
           secondary: "#ffff",
           darker: "#008DDA",
+          lighter: "#1176ad",
         },
       },
       fontFamily: {
