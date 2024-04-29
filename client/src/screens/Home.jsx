@@ -5,6 +5,7 @@ import { io } from "socket.io-client"
 import Inbox from "../components/home/Inbox";
 import SideBar from "../components/home/SideBar";
 import MainChat from "../components/home/MainChat";
+import chatbg from "../assets/image/chat-bg.jpg"
 
 function Home() {
   const user = useSelector((state) => state.User)
@@ -32,13 +33,12 @@ function Home() {
             <TopBar user={user} />
           </div>
           <div className="flex flex-1">
-            <div className="w-2/6 bg-background-lighter mt-4 mx-3 rounded-xl">
-
+            <div className="w-full bg-background-lighter mt-4 mx-3 rounded-xl">
               <Inbox />
             </div>
-            <div className="flex-1 bg-background-lighter mt-4 mr-3 rounded-xl">
-              {/* <MainChat /> */}
-            </div>
+            {/* <div className=" mt-4 mr-3 rounded-xl flex-1 " style={{ backgroundImage: `url(${chatbg})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}>
+              <MainChat />
+            </div> */}
           </div>
         </div>
       </div>
