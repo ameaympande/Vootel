@@ -16,7 +16,7 @@ const errorHandler = require("./middleware/errorHandler");
 
 connectDB();
 
-app.use(logger);
+// app.use(logger);
 
 app.use(cors(corsOption));
 
@@ -31,6 +31,8 @@ app.use(errorHandler);
 const socketIO = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credential: true,
   },
 });
 
@@ -38,8 +40,14 @@ app.use(cors());
 
 socketIO.on("connection", (socket) => {
   console.log(`🟢 : ${socket.id} user just connected!`);
-  socket.on("disconnect", () => {
-    console.log("🔴 : A user disconnected");
+
+  socket.on("message", (message) => {
+    console.log(`Received message from ${socket.id}: ${message}`);
+    socket.broadcast.emit("message", message);
+  });
+
+  socket.on("disconnect", (socket) => {
+    console.log(`🔴 : ${socket.id} user disconnected`);
   });
 });
 
@@ -50,7 +58,7 @@ app.get("/", (req, res) => {
 });
 
 mongoose.connection.once("open", () => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT} with ${ENV} Environment`);
   });
 });

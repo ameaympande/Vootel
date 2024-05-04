@@ -28,7 +28,7 @@ function Input({ name, type, placeholder, value, onChange, fontSize, error, auto
                     {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
                 </button>
             )}
-            {error && <p className="text-red-500 text-xs absolute top-full mt-1 left-0">{error}</p>}
+            {error && <p className="text-red-500 text-xs absolute top-full mt-1 left-0 text-center">{error}</p>}
         </div>
     );
 }

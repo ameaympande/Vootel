@@ -5,3 +5,25 @@
 body {
   font-family: "Inter";
 }
+
+.scrollbar {
+  scrollbar-width: none;
+}
+
+.scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(110, 99, 99, 0.1);
+}
+
+.scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}

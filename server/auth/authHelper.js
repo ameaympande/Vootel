@@ -31,7 +31,7 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const signUp = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: "Email and Password is required." });
@@ -45,7 +45,7 @@ const signUp = asyncHandler(async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new User({ email, password: hashedPassword, name });
     await newUser.save();
 
     res.status(201).json({ message: "User created successfully" });

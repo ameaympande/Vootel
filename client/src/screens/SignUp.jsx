@@ -14,13 +14,13 @@ function SignUp() {
   const [form, setForm] = useState({
     email: "",
     password: "",
-    cpassword: "",
+    name: "",
   });
 
   const [errors, setErrors] = useState({
     email: "",
     password: "",
-    cpassword: "",
+    name: "",
   });
 
   const handleOnChange = (e) => {
@@ -39,7 +39,7 @@ function SignUp() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const { email, password } = form;
+    const { email, password, name } = form;
     const newErrors = {};
 
     if (email.trim() === "") {
@@ -52,9 +52,8 @@ function SignUp() {
       newErrors.password = "Password should be at least 8 characters long";
     }
 
-    if (form.password !== form.cpassword) {
-      newErrors.password = "Password should match";
-      newErrors.cpassword = "Password should match";
+    if (name.trim() === "") {
+      newErrors.name = "Name cannot be empty";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -81,7 +80,7 @@ function SignUp() {
 
   return (
     <div className="h-screen">
-      <div className="h-auto flex flex-col lg:flex-row justify-center px-4 sm:px-0">
+      <div className="h-auto flex flex-col lg:flex-row justify-center sm:px-0">
         <div className="bg-background-darker lg:mt-7 mt-10 lg:w-[20%] flex justify-center items-center rounded-l-xl hidden lg:flex ">
           <img src={logo} className="h-24 lg:h-32" alt="logo" />
         </div>
@@ -104,6 +103,20 @@ function SignUp() {
                 </div>
               </div>
               <div className="mt-5">
+                <p className="text-md font-normal">Name</p>
+                <div className="mt-2">
+                  <Input
+                    name="name"
+                    value={form.name}
+                    onChange={handleOnChange}
+                    type="text"
+                    placeholder="Enter your name"
+                    fontSize="text-sm sm:text-md"
+                    error={errors.name}
+                  />
+                </div>
+              </div>
+              <div className="mt-5">
                 <p className="text-md font-normal">Password</p>
                 <div className="mt-2">
                   <Input
@@ -117,20 +130,7 @@ function SignUp() {
                   />
                 </div>
               </div>
-              <div className="mt-5">
-                <p className="text-md font-normal">Confirm Password</p>
-                <div className="mt-2">
-                  <Input
-                    name="cpassword"
-                    value={form.cpassword}
-                    onChange={handleOnChange}
-                    type="password"
-                    placeholder="Confirm Password"
-                    fontSize="text-sm sm:text-md"
-                    error={errors.password}
-                  />
-                </div>
-              </div>
+
 
 
               <div className="mt-6">

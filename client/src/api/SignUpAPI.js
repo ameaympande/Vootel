@@ -1,10 +1,11 @@
 import axios from "axios";
 
-export const signUp = async ({ email, password }) => {
+export const signUp = async ({ email, password, name }) => {
   const apiUrl = "https://vootel.onrender.com/signup";
   const body = {
     email,
     password,
+    name,
   };
 
   try {
