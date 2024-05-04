@@ -35,13 +35,13 @@ function Inbox() {
                 <div className="flex items-center justify-center">
                     <div className="bg-background-secondary px-1 py-1.5 rounded-full hover:cursor-pointer">
                         <div className="flex items-center justify-center gap-3 md:gap-3">
-                            <div className={`hover:bg-background-darker px-3 py-1 rounded-md ${selectedTab === "Primary" ? "bg-background-darker" : ""}`} onClick={() => setSelectedTab("Primary")}>
+                            <div className={`hover:bg-background-darker px-3 py-1 relative rounded-full ${selectedTab === "Primary" ? "bg-background-darker" : ""}`} onClick={() => setSelectedTab("Primary")}>
                                 <p className="text-sm font-medium text-white">Primary</p>
                             </div>
-                            <div className={`hover:bg-background-darker px-3 py-1 rounded-md ${selectedTab === "Group" ? "bg-background-darker" : ""}`} onClick={() => setSelectedTab("Group")}>
+                            <div className={`hover:bg-background-darker px-3 py-1 rounded-full ${selectedTab === "Group" ? "bg-background-darker" : ""}`} onClick={() => setSelectedTab("Group")}>
                                 <p className="text-sm font-medium text-white">Group</p>
                             </div>
-                            <div className={`hover:bg-background-darker px-3 py-1 rounded-md ${selectedTab === "Archive" ? "bg-background-darker" : ""}`} onClick={() => setSelectedTab("Archive")}>
+                            <div className={`hover:bg-background-darker px-3 py-1 rounded-full ${selectedTab === "Archive" ? "bg-background-darker" : ""}`} onClick={() => setSelectedTab("Archive")}>
                                 <p className="text-sm font-medium text-white">Archive</p>
                             </div>
                         </div>
