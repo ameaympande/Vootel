@@ -6,7 +6,7 @@ import googleLogo from "../assets/image/google.png";
 import { ThreeDots } from "react-loader-spinner";
 import { signUp } from "../api/SignUpAPI";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -130,9 +130,6 @@ function SignUp() {
                   />
                 </div>
               </div>
-
-
-
               <div className="mt-6">
                 <Button type="submit" onClick={handleSignUp}>
                   {loading ? (
@@ -169,12 +166,14 @@ function SignUp() {
             <div>
               <div className="mt-3 flex justify-center items-center">
                 <p className="text-sm font-normal">Already have an account?</p>
-                <a
+                <div
                   className="text-color-darker text-sm font-bold hover:cursor-pointer ml-1"
-                  href="/signin"
+
                 >
-                  Sign in
-                </a>
+                  <Link to="/signin">
+                    Sign in
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

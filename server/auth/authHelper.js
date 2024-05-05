@@ -27,7 +27,12 @@ const login = asyncHandler(async (req, res) => {
     expiresIn: "24h",
   });
 
-  res.json({ message: "Login success", token: token, userId: user._id });
+  res.json({
+    message: "Login success",
+    token: token,
+    userId: user._id,
+    name: user.name,
+  });
 });
 
 const signUp = asyncHandler(async (req, res) => {

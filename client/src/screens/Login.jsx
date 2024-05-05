@@ -3,7 +3,7 @@ import logo from "../assets/image/Slogo.png";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import googleLogo from "../assets/image/google.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { LoginAPI } from "../api/LoginAPI";
@@ -70,7 +70,7 @@ function Login() {
       const res = await Promise.race([LoginAPI(form), timeoutPromise]);
       if (res.status === 200) {
         toast.success(res.data.message);
-        dispatch(setUser({ email: form.email, isLoggedIn: true }));
+        dispatch(setUser({ email: form.email, isLoggedIn: true, }));
         localStorage.setItem("vootelToken", res.data.token);
         navigate("/");
       } else {
@@ -167,12 +167,14 @@ function Login() {
             <div>
               <div className="mt-3 flex justify-center items-center">
                 <p className="text-sm font-normal">Don't have an account?</p>
-                <a
+                <div
                   className="text-color-darker text-sm font-bold hover:cursor-pointer ml-1"
-                  href="/signup"
+
                 >
-                  Sign up
-                </a>
+                  <Link to="/signup">
+                    Sign up
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
