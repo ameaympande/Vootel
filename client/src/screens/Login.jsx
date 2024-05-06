@@ -70,7 +70,7 @@ function Login() {
       const res = await Promise.race([LoginAPI(form), timeoutPromise]);
       if (res.status === 200) {
         toast.success(res.data.message);
-        dispatch(setUser({ email: form.email, isLoggedIn: true, }));
+        dispatch(setUser({ email: form.email, isLoggedIn: true, name: res.data.name }));
         localStorage.setItem("vootelToken", res.data.token);
         navigate("/");
       } else {

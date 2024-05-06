@@ -6,16 +6,9 @@ import Button from "../Button";
 import chatbg from "../../assets/image/chat-bg.jpg";
 import MainChat from "./MainChat";
 
-function Inbox() {
+function Inbox({ user }) {
     const navigate = useNavigate();
-    const [user, setUser] = useState({});
     const [selectedTab, setSelectedTab] = useState("Primary");
-
-    const handleLogOut = () => {
-        localStorage.removeItem("vootel");
-        localStorage.removeItem("vootelToken");
-        navigate("/signin");
-    };
 
     return (
         <div className="flex flex-row">
@@ -48,7 +41,7 @@ function Inbox() {
                     </div>
                 </div>
                 <div className="overflow-y-auto overflow-hidden h-[400px] scrollbar">
-                    <div className="mt-5 bg-background-secondary h-20 mx-4 rounded-lg flex items-center px-4 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out shadow-md" onClick={() => setUser({ userId: 1 })}>
+                    <div className="mt-5 bg-background-secondary h-20 mx-4 rounded-lg flex items-center px-4 hover:cursor-pointer hover:scale-105 transition duration-300 ease-in-out shadow-md">
                         <div>
                             <img src={profile} className="w-12 h-12 bg-gray-300 rounded-full" alt="Profile" />
                         </div>

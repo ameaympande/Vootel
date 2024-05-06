@@ -6,8 +6,6 @@ export const UserSlice = createSlice({
     userId: "",
     name: "",
     email: "",
-    firstName: "",
-    lastName: "",
     isLoggedIn: false,
   },
   reducers: {
