@@ -24,7 +24,7 @@ app.use(express.json());
 
 app.post("/login", auth.login);
 app.post("/signup", auth.signUp);
-// app.use("/users", require("./routes/userRoutes"));
+app.use("/users", require("./routes/userRoutes"));
 
 app.use(errorHandler);
 

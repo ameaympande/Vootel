@@ -11,6 +11,7 @@ function Home() {
   const user = useSelector((state) => state.User)
   const socket = useMemo(() => io("http://localhost:4000"), [])
 
+  console.log("user", user);
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Connected", socket.id);
@@ -34,7 +35,7 @@ function Home() {
           </div>
           <div className="flex flex-1">
             <div className="w-full bg-background-lighter mt-4 mx-3 rounded-xl">
-              <Inbox />
+              <Inbox user={user} />
             </div>
             {/* <div className=" mt-4 mr-3 rounded-xl flex-1 " style={{ backgroundImage: `url(${chatbg})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}>
               <MainChat />
