@@ -1,27 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import profile from "../../assets/image/profile.png";
-import { Bell } from "lucide-react";
+import { BadgePlus, Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import Popup from 'reactjs-popup';
+import axios from 'axios';
+import { useDebounce } from "../../hooks/hooks";
 
 function TopBar({ user }) {
     const navigate = useNavigate();
     const [showPopup, setShowPopup] = useState(false);
     const [searchInput, setSearchInput] = useState("");
+    const debounceSearch = useDebounce(searchInput);
+    const [searchResults, setSearchResults] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (searchInput.length > 0)
+            loadUser();
+    }, [debounceSearch]);
+
+    const loadUser = async () => {
+        setLoading(true);
+        setError("");
+        try {
+            const response = await axios.get(`http://localhost:4000/users/search?term=${debounceSearch}`);
+            if (response.data.length > 0)
+                setSearchResults(response.data);
+            else
+                setError("No users found.");
+        } catch (error) {
+            console.error("Error searching users:", error);
+            setError(error.response.data.error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleAddChat = () => {
-        // Open the popup
         setShowPopup(true);
     };
 
     const handleSearchInputChange = (e) => {
+        setSearchResults([]);
         setSearchInput(e.target.value);
-    };
-
-    const handleSearch = () => {
-        // Handle search logic here
-        console.log("Searching for:", searchInput);
     };
 
     return (
@@ -52,7 +75,7 @@ function TopBar({ user }) {
                 closeOnDocumentClick
                 contentStyle={{ marginTop: "100px" }}
             >
-                <div className="bg-background-secondary p-4 w-80 rounded-xl min-h-80 flex flex-col justify-between">
+                <div className="bg-background-secondary p-4 min-w-84 rounded-xl min-h-80 flex flex-col justify-between">
                     <div>
                         <h2 className="text-xl font-semibold mb-4 text-white">Search User</h2>
                         <input
@@ -62,14 +85,31 @@ function TopBar({ user }) {
                             onChange={handleSearchInputChange}
                             className="border border-gray-300 rounded px-3 py-2 mb-4 w-full"
                         />
+                        {loading && <p>Loading...</p>}
+                        {error && <p className="text-white">{error}</p>}
+                        {searchResults.length > 0 && searchInput.length > 0 && (
+                            <div className="bg-background-secondary mt-2 rounded-xl">
+                                <ul>
+                                    {searchResults.map((user) => (
+                                        <li className="flex justify-between items-center text-white mt-4 hover:cursor-pointer" key={user._id}>
+                                            <span>{user.name}</span>
+                                            <div>
+                                                <BadgePlus color="lightgreen" />
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
                     <div className="flex ">
-                        <Button onClick={handleSearch} className="bg-blue-500 text-white px-4 py-2 rounded">
+                        <Button onClick={loadUser} className="bg-blue-500 text-white px-4 py-2 rounded">
                             Search
                         </Button>
                     </div>
                 </div>
             </Popup>
+
         </div>
     );
 }
