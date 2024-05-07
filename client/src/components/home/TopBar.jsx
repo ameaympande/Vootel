@@ -56,9 +56,9 @@ function TopBar({ user }) {
         setSearchInput("")
         setSearchResults([]);
     }
-
     const handleAdd = (user) => {
-        dispatch(setChatList(user))
+        dispatch(setChatList(user));
+        setShowPopup(false);
     }
     return (
         <div className="bg-background-lighter w-full rounded-xl flex-col">
