@@ -4,32 +4,35 @@ import { Video, PhoneCall, X, Send, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import chatbg from "../../assets/image/chat-bg.jpg";
+import { useDispatch } from "react-redux";
+import { removeFromChatList } from "../../redux/features/User/UserSlice";
 
-function MainChat({ user }) {
+function MainChat({ user, setSelectedUser }) {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [messageInput, setMessageInput] = useState("");
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(user.messages || []);
 
+    console.log(user);
     const handleSendMessage = () => {
         const newMessage = {
             text: messageInput,
             sender: user,
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
             sent: true
         };
         setMessages([...messages, newMessage]);
         setMessageInput("");
     };
 
-    const handleLogOut = () => {
-        localStorage.removeItem("vootel");
-        localStorage.removeItem("vootelToken");
-        navigate("/signin");
-    };
-
     const formatTime = (timestamp) => {
         return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
+
+    const handleCancel = () => {
+        // dispatch(removeFromChatList(user._id))
+        setSelectedUser(null)
+    }
 
     return (
         <>
@@ -40,9 +43,9 @@ function MainChat({ user }) {
                     </div>
                     <div className="flex-1 ml-4">
                         <div className="flex justify-between">
-                            <p className="text-white font-semibold">John Doe</p>
+                            <p className="text-white font-semibold">{user.name}</p>
                         </div>
-                        <p className="text-gray-300 text-sm tracking-tight line-clamp-1">Active</p>
+                        <p className="text-gray-300 text-sm tracking-tight line-clamp-1">{user.status || "Status"}</p>
                     </div>
                     <div className="flex justify-between gap-4">
                         <div>
@@ -52,7 +55,7 @@ function MainChat({ user }) {
                             <Button className="hidden md:block px-1.5"><PhoneCall /></Button>
                         </div>
                         <div>
-                            <Button className="hidden md:block px-1.5"><X /></Button>
+                            <Button className="hidden md:block px-1.5" onClick={handleCancel}><X /></Button>
                         </div>
                     </div>
                 </div>

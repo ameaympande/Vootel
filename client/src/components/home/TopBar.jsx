@@ -6,9 +6,11 @@ import Button from "../Button";
 import Popup from 'reactjs-popup';
 import axios from 'axios';
 import { useDebounce } from "../../hooks/hooks";
+import { setChatList } from "../../redux/features/User/UserSlice";
+import { useDispatch } from "react-redux";
 
 function TopBar({ user }) {
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [showPopup, setShowPopup] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const debounceSearch = useDebounce(searchInput);
@@ -26,10 +28,11 @@ function TopBar({ user }) {
         setError("");
         try {
             const response = await axios.get(`https://vootel.onrender.com/users/search?term=${debounceSearch}`);
-            if (response.data.length > 0)
+            if (response.data.length > 0) {
                 setSearchResults(response.data);
-            else
+            } else {
                 setError("No users found.");
+            }
         } catch (error) {
             console.error("Error searching users:", error);
             setError(error.response.data.error);
@@ -38,6 +41,7 @@ function TopBar({ user }) {
         }
     };
 
+    console.log(searchResults);
     const handleAddChat = () => {
         setShowPopup(true);
     };
@@ -47,6 +51,15 @@ function TopBar({ user }) {
         setSearchInput(e.target.value);
     };
 
+    const handleClose = () => {
+        setShowPopup(false);
+        setSearchInput("")
+        setSearchResults([]);
+    }
+
+    const handleAdd = (user) => {
+        dispatch(setChatList(user))
+    }
     return (
         <div className="bg-background-lighter w-full rounded-xl flex-col">
             <div className="flex items-center justify-between p-4">
@@ -55,7 +68,7 @@ function TopBar({ user }) {
                 </div>
                 <div className="flex items-center gap-4 md:gap-7 relative">
                     <div>
-                        <Button className="hidden md:block" onClick={handleAddChat}>+ New Chat</Button>
+                        <Button className="hidden md:block font-inter" onClick={handleAddChat}>+ New Chat</Button>
                     </div>
                     <div>
                         <Bell color="white" />
@@ -71,7 +84,7 @@ function TopBar({ user }) {
             <Popup
                 open={showPopup}
                 position="top center"
-                onClose={() => setShowPopup(false)}
+                onClose={handleClose}
                 closeOnDocumentClick
                 contentStyle={{ marginTop: "100px" }}
             >
@@ -85,7 +98,7 @@ function TopBar({ user }) {
                             onChange={handleSearchInputChange}
                             className="border border-gray-300 rounded px-3 py-2 mb-4 w-full"
                         />
-                        {loading && <p>Loading...</p>}
+                        {loading && <p className="text-white">Loading...</p>}
                         {error && <p className="text-white">{error}</p>}
                         {searchResults.length > 0 && searchInput.length > 0 && (
                             <div className="bg-background-secondary mt-2 rounded-xl">
@@ -94,7 +107,7 @@ function TopBar({ user }) {
                                         <li className="flex justify-between items-center text-white mt-4 hover:cursor-pointer" key={user._id}>
                                             <span>{user.name}</span>
                                             <div>
-                                                <BadgePlus color="lightgreen" />
+                                                <BadgePlus color="lightgreen" onClick={() => handleAdd(user)} />
                                             </div>
                                         </li>
                                     ))}
