@@ -53,9 +53,11 @@ const signUp = asyncHandler(async (req, res) => {
     const newUser = new User({ email, password: hashedPassword, name });
     await newUser.save();
 
+    const { password, ...userData } = newUser.toObject();
+
     res
       .status(201)
-      .json({ message: "User created successfully", data: newUser });
+      .json({ message: "User created successfully", data: userData });
   } catch (error) {
     console.error("Error occurred during sign-up:", error);
     res.status(500).json({ error: "Internal server error" });
