@@ -53,7 +53,9 @@ const signUp = asyncHandler(async (req, res) => {
     const newUser = new User({ email, password: hashedPassword, name });
     await newUser.save();
 
-    const { password, ...userData } = newUser.toObject();
+    const userData = newUser
+      ? { ...newUser.toObject(), password: undefined }
+      : {};
 
     res
       .status(201)

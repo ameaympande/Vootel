@@ -3,7 +3,6 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 
 router.route("/").get(userController.getAllUsers);
-
-router.route("/search").get(userController.searchUsers);
+router.get("/search", userController.getAllUsers);
 
 module.exports = router;
