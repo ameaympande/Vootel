@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const LoginAPI = async ({ email, password }) => {
-  const apiUrl = "https://vootel.onrender.com/login";
+  const apiUrl = "http://localhost:4000/login";
   const body = {
     email,
     password,

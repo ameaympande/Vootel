@@ -4,24 +4,9 @@ import TopBar from "../components/home/TopBar";
 import { io } from "socket.io-client"
 import Inbox from "../components/home/Inbox";
 import SideBar from "../components/home/SideBar";
-import MainChat from "../components/home/MainChat";
-import chatbg from "../assets/image/chat-bg.jpg"
 
 function Home() {
   const user = useSelector((state) => state.User)
-  const socket = useMemo(() => io("http://localhost:4000"), [])
-
-  console.log("user", user);
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected", socket.id);
-    })
-
-    socket.on("message", (message) => {
-      console.log(message);
-    })
-
-  }, [])
 
   return (
     <div className="h-screen p-2 flex flex-col">

@@ -1,19 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import profile from "../../assets/image/profile.png";
 import { Video, PhoneCall, X, Send, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import chatbg from "../../assets/image/chat-bg.jpg";
 import { useDispatch } from "react-redux";
-import { removeFromChatList } from "../../redux/features/User/UserSlice";
+import { io } from "socket.io-client";
 
 function MainChat({ user, setSelectedUser }) {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const socket = useMemo(() => io("http://localhost:4000"), []);
     const [messageInput, setMessageInput] = useState("");
     const [messages, setMessages] = useState(user.messages || []);
 
-    console.log(user);
     const handleSendMessage = () => {
         const newMessage = {
             text: messageInput,
@@ -21,18 +19,35 @@ function MainChat({ user, setSelectedUser }) {
             timestamp: new Date().toISOString(),
             sent: true
         };
-        setMessages([...messages, newMessage]);
+
+        socket.emit("chat message", newMessage);
         setMessageInput("");
     };
+
+    useEffect(() => {
+        socket.on("chat message", receiveMessage);
+
+        return () => {
+            socket.off("chat message", receiveMessage);
+        };
+    }, [socket]);
 
     const formatTime = (timestamp) => {
         return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
 
     const handleCancel = () => {
-        // dispatch(removeFromChatList(user._id))
-        setSelectedUser(null)
-    }
+        setSelectedUser(null);
+    };
+
+    const receiveMessage = (data) => {
+        console.log(data.sender._id === user.id);
+        if (data.sender._id === user.id) {
+            setMessages(prevMessages => [...prevMessages, { ...data, user: true }]);
+        } else {
+            setMessages(prevMessages => [...prevMessages, { ...data, user: false }]);
+        }
+    };
 
     return (
         <>
@@ -62,8 +77,8 @@ function MainChat({ user, setSelectedUser }) {
 
                 <div className="mt-5 mx-4">
                     {messages.map((msg, index) => (
-                        <div key={index} className={`flex ${msg.sender === user ? "justify-end" : "justify-start"} mb-2`}>
-                            <div className={`bg-gray-300 rounded-lg p-2 ${msg.sender === user ? "text-left bg-green-500 text-color-secondary" : "text-right"} text-sm text-gray-800`}>
+                        <div key={index} className={`flex ${msg.user ? "justify-end" : "justify-start"} mb-2`}>
+                            <div className={`bg-gray-300 rounded-lg p-2 ${msg.user ? "text-left bg-green-500 text-color-secondary" : "text-right"} text-sm text-gray-800`}>
                                 <p className="mb-1">{msg.text}</p>
                                 <div className="flex justify-end items-center">
                                     <span className="text-xs mr-1">{msg.timestamp && formatTime(msg.timestamp)}</span>

@@ -27,7 +27,7 @@ function TopBar({ user }) {
         setLoading(true);
         setError("");
         try {
-            const response = await axios.get(`https://vootel.onrender.com/users/search?term=${debounceSearch}`);
+            const response = await axios.get(`http://localhost:4000/users/search?term=${debounceSearch}`);
             if (response.data.length > 0) {
                 setSearchResults(response.data);
             } else {
@@ -41,8 +41,8 @@ function TopBar({ user }) {
         }
     };
 
-    console.log(searchResults);
     const handleAddChat = () => {
+        loadUser();
         setShowPopup(true);
     };
 
@@ -86,9 +86,9 @@ function TopBar({ user }) {
                 position="top center"
                 onClose={handleClose}
                 closeOnDocumentClick
-                contentStyle={{ marginTop: "100px" }}
+                contentStyle={{ marginTop: "60px" }}
             >
-                <div className="bg-background-secondary p-4 min-w-84 rounded-xl min-h-80 flex flex-col justify-between">
+                <div className="bg-background-secondary p-4 w-[150%] rounded-xl min-h-80 flex flex-col justify-between">
                     <div>
                         <h2 className="text-xl font-semibold mb-4 text-white">Search User</h2>
                         <input
@@ -96,12 +96,12 @@ function TopBar({ user }) {
                             placeholder="Enter email or name"
                             value={searchInput}
                             onChange={handleSearchInputChange}
-                            className="border border-gray-300 rounded px-3 py-2 mb-4 w-full"
+                            className="border border-gray-300 rounded px-3 py-2  w-full"
                         />
-                        {loading && <p className="text-white">Loading...</p>}
+                        {loading && <p className="text-white mt-2">Loading...</p>}
                         {error && <p className="text-white">{error}</p>}
-                        {searchResults.length > 0 && searchInput.length > 0 && (
-                            <div className="bg-background-secondary mt-2 rounded-xl">
+                        {searchResults.length > 0 && (
+                            <div className="bg-background-secondary rounded-xl overflow-y-auto max-h-60 scrollbar mb-4">
                                 <ul>
                                     {searchResults.map((user) => (
                                         <li className="flex justify-between items-center text-white mt-4 hover:cursor-pointer" key={user._id}>

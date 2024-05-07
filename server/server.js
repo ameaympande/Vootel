@@ -3,22 +3,22 @@ const http = require("http");
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const PORT = process.env.PORT;
-const ENV = process.env.ENV;
+const PORT = process.env.PORT || 4000;
+const ENV = process.env.ENV || "development";
 const cors = require("cors");
 const server = http.createServer(app);
 const connectDB = require("./config/dbConn");
 const auth = require("./auth/authHelper");
 
-const corsOption = require("./config/corsOption");
-const { logger, logEvents } = require("./middleware/logger");
-const errorHandler = require("./middleware/errorHandler");
+const corsOptions = {
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST"],
+  credentials: true,
+};
 
 connectDB();
 
-// app.use(logger);
-
-app.use(cors(corsOption));
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -26,28 +26,30 @@ app.post("/login", auth.login);
 app.post("/signup", auth.signUp);
 app.use("/users", require("./routes/userRoutes"));
 
-app.use(errorHandler);
-
-const socketIO = require("socket.io")(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    credential: true,
-  },
+const io = require("socket.io")(server, {
+  cors: corsOptions,
 });
 
-app.use(cors());
+const activeUsers = new Set();
 
-socketIO.on("connection", (socket) => {
+io.on("connection", (socket) => {
   console.log(`🟢 : ${socket.id} user just connected!`);
 
-  socket.on("message", (message) => {
-    console.log(`Received message from ${socket.id}: ${message}`);
-    socket.broadcast.emit("message", message);
+  socket.on("new user", function (data) {
+    socket.userId = data;
+    activeUsers.add(data);
+    io.emit("new user", [...activeUsers]);
   });
 
-  socket.on("disconnect", (socket) => {
+  socket.on("chat message", (data) => {
+    console.log(data);
+    io.emit("chat message", data);
+  });
+
+  socket.on("disconnect", () => {
     console.log(`🔴 : ${socket.id} user disconnected`);
+    activeUsers.delete(socket.userId);
+    io.emit("user disconnected", socket.userId);
   });
 });
 
@@ -57,16 +59,10 @@ app.get("/", (req, res) => {
   });
 });
 
-mongoose.connection.once("open", () => {
-  server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT} with ${ENV} Environment`);
-  });
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT} with ${ENV} Environment`);
 });
 
 mongoose.connection.on("error", (err) => {
   console.log(err);
-  logEvents(
-    `${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`,
-    "mongoErrLog.log"
-  );
 });

@@ -7,7 +7,7 @@ import chatbg from "../../assets/image/chat-bg.jpg";
 import MainChat from "./MainChat";
 import { useSelector } from "react-redux";
 
-function Inbox({ user }) {
+function Inbox({ user, socket }) {
     const navigate = useNavigate();
     const stateUser = useSelector((state) => state.User);
     const [selectedTab, setSelectedTab] = useState("Primary");
@@ -62,7 +62,7 @@ function Inbox({ user }) {
             </div>
             {selectedUser?._id && (
                 <div className="mt-4 mr-3 rounded-xl flex-1 p-1" style={{ backgroundImage: `url(${chatbg})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}>
-                    <MainChat user={selectedUser} setSelectedUser={setSelectedUser} />
+                    <MainChat user={selectedUser} setSelectedUser={setSelectedUser} socket={socket} />
                 </div>
             )}
         </div>
