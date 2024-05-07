@@ -25,7 +25,7 @@ function TopBar({ user }) {
         setLoading(true);
         setError("");
         try {
-            const response = await axios.get(`http://localhost:4000/users/search?term=${debounceSearch}`);
+            const response = await axios.get(`https://vootel.onrender.com/users/search?term=${debounceSearch}`);
             if (response.data.length > 0)
                 setSearchResults(response.data);
             else
